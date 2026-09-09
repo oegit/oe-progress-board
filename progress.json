@@ -1,0 +1,31 @@
+{
+  "schema_version": "1",
+  "slug": "oe-progress-board",
+  "name": "OE Progress Board",
+  "kind": "project",
+  "public_summary": "One public page showing where every Open English agent stands.",
+  "stages": [
+    { "id": "conceptualization", "state": "done", "date": "2026-09-03" },
+    { "id": "planning",          "state": "done", "date": "2026-09-04" },
+    { "id": "planning_audit",    "state": "done", "date": "2026-09-05" },
+    { "id": "building",          "state": "in_progress", "note": "The page is live and rebuilds itself every hour." },
+    { "id": "building_audit",    "state": "pending" },
+    { "id": "testing",           "state": "pending" },
+    { "id": "deployment",        "state": "pending" }
+  ],
+  "building": {"done":10,"total":13},
+  "features_built": [
+    "Shows one card per unit with a seven-stage stepper",
+    "Rebuilds itself every hour from each unit's own report",
+    "Marks a report older than 14 days as Stale",
+    "Rejects any report that contains private information",
+    "Publishes a unit's progress with one skill"
+  ],
+  "features_pending": [
+    "Cards for the eleven other agents and packs",
+    "A guide for backfilling each unit's history",
+    "A public README explaining the page"
+  ],
+  "updated_at": "2026-09-09",
+  "source_commit": "8864ada"
+}

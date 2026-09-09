@@ -9,7 +9,7 @@
 // --help and --placeholder are permanent: step 1's gate re-runs them forever.
 
 import { mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SourceError, fetchFromApi, fetchFromDir, readManifest } from './fetch.mjs';
 import { computeBoard } from './compute.mjs';
@@ -140,4 +140,6 @@ export async function main(argv, env = process.env, fetchImpl = globalThis.fetch
   return 0;
 }
 
-process.exitCode = await main(process.argv.slice(2));
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  process.exitCode = await main(process.argv.slice(2));
+}
