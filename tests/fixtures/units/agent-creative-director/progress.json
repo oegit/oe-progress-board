@@ -1,0 +1,48 @@
+{
+  "schema_version": "1",
+  "slug": "agent-creative-director",
+  "name": "Creative Director Agent",
+  "kind": "agent",
+  "public_summary": "Reviews campaign concepts against the brand before production starts.",
+  "stages": [
+    {
+      "id": "conceptualization",
+      "state": "done",
+      "date": "2026-07-30"
+    },
+    {
+      "id": "planning",
+      "state": "done",
+      "date": "2026-08-12"
+    },
+    {
+      "id": "planning_audit",
+      "state": "in_progress",
+      "note": "The plan is under review."
+    },
+    {
+      "id": "building",
+      "state": "pending"
+    },
+    {
+      "id": "building_audit",
+      "state": "pending"
+    },
+    {
+      "id": "testing",
+      "state": "pending"
+    },
+    {
+      "id": "deployment",
+      "state": "pending"
+    }
+  ],
+  "building": null,
+  "features_built": [],
+  "features_pending": [
+    "Scores a concept against the brand voice",
+    "Suggests a stronger headline"
+  ],
+  "updated_at": "2026-08-18",
+  "source_commit": "deadbeef1"
+}
