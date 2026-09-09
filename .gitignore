@@ -1,0 +1,27 @@
+# Generated site. Never committed: the workflow builds it on every run.
+dist/
+
+# Scratch output for verify commands (blueprint §9 and §20.1).
+.tmp/
+
+# Backfill hand-off prompts: they carry absolute local machine paths.
+handoffs/
+
+# The blueprint bundle. This repository is PUBLIC and the bundle names private
+# repositories and local paths, so it stays in the working tree and out of git.
+blueprints/
+
+# Never used by this project (zero dependencies), listed so an accidental
+# `npm install` cannot commit a tree.
+node_modules/
+
+# No .env exists in this project: the single secret lives in GitHub Actions.
+# The pattern is here so a future one can never be committed by accident.
+.env
+.env.*
+
+# Backups made by scripts/patch-handoff-skill.mjs live outside this repository,
+# but a stray one here must never be committed.
+*.bak-*
+
+.DS_Store

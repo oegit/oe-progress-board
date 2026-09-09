@@ -1,0 +1,16 @@
+{
+  "name": "oe-progress-board",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "One public page showing where every Open English agent stands.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "check": "for f in scripts/*.mjs; do [ -e \"$f\" ] || continue; node --check \"$f\" || exit 1; done",
+    "test": "node --test 'tests/**/*.test.mjs'",
+    "generate": "node scripts/generate.mjs"
+  }
+}
