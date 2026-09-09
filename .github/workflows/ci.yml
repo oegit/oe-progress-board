@@ -1,0 +1,16 @@
+# The required check every pull request waits on. Step 2 (E1-T2) adds `npm test`.
+name: ci
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - run: npm run check
