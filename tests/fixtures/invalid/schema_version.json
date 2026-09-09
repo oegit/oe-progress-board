@@ -1,0 +1,55 @@
+{
+  "schema_version": "2",
+  "slug": "agent-ugc",
+  "name": "UGC Agent",
+  "kind": "agent",
+  "public_summary": "Turns a product brief into ready-to-post creator videos.",
+  "stages": [
+    {
+      "id": "conceptualization",
+      "state": "done",
+      "date": "2026-06-14"
+    },
+    {
+      "id": "planning",
+      "state": "done",
+      "date": "2026-06-20"
+    },
+    {
+      "id": "planning_audit",
+      "state": "done",
+      "date": "2026-06-22"
+    },
+    {
+      "id": "building",
+      "state": "in_progress",
+      "note": "Half the task bundle is closed."
+    },
+    {
+      "id": "building_audit",
+      "state": "pending"
+    },
+    {
+      "id": "testing",
+      "state": "pending"
+    },
+    {
+      "id": "deployment",
+      "state": "pending"
+    }
+  ],
+  "building": {
+    "done": 5,
+    "total": 10
+  },
+  "features_built": [
+    "Writes a shot list from a brief",
+    "Picks a creator voice"
+  ],
+  "features_pending": [
+    "Renders the final cut",
+    "Publishes to the content calendar"
+  ],
+  "updated_at": "2026-08-28",
+  "source_commit": "a1b2c3d"
+}

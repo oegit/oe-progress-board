@@ -1,0 +1,52 @@
+{
+  "schema_version": "1",
+  "slug": "agent-video-studio",
+  "name": "Video Studio Agent",
+  "kind": "agent",
+  "public_summary": "Produces short social videos from a script and a voice.",
+  "stages": [
+    {
+      "id": "conceptualization",
+      "state": "done",
+      "date": "2026-06-01"
+    },
+    {
+      "id": "planning",
+      "state": "done",
+      "date": "2026-06-10"
+    },
+    {
+      "id": "planning_audit",
+      "state": "done",
+      "date": "2026-06-12"
+    },
+    {
+      "id": "building",
+      "state": "in_progress"
+    },
+    {
+      "id": "building_audit",
+      "state": "pending"
+    },
+    {
+      "id": "testing",
+      "state": "pending"
+    },
+    {
+      "id": "deployment",
+      "state": "pending"
+    }
+  ],
+  "building": {
+    "done": 12,
+    "total": 10
+  },
+  "features_built": [
+    "Renders a narrated clip from a script"
+  ],
+  "features_pending": [
+    "Adds subtitles in every market language"
+  ],
+  "updated_at": "2026-08-25",
+  "source_commit": "abc1234"
+}

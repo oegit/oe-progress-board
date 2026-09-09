@@ -1,0 +1,56 @@
+{
+  "schema_version": "1",
+  "slug": "agent-web-developer",
+  "name": "Web Developer Agent",
+  "kind": "agent",
+  "public_summary": "Builds and publishes landing pages from a design file.",
+  "stages": [
+    {
+      "id": "conceptualization",
+      "state": "done",
+      "date": "2026-05-02"
+    },
+    {
+      "id": "planning",
+      "state": "done",
+      "date": "2026-05-09"
+    },
+    {
+      "id": "planning_audit",
+      "state": "done",
+      "date": "2026-05-11"
+    },
+    {
+      "id": "building",
+      "state": "done",
+      "date": "2026-06-30"
+    },
+    {
+      "id": "building_audit",
+      "state": "done",
+      "date": "2026-07-05"
+    },
+    {
+      "id": "testing",
+      "state": "done",
+      "date": "2026-07-20"
+    },
+    {
+      "id": "deployment",
+      "state": "done",
+      "date": "2026-08-01"
+    }
+  ],
+  "building": {
+    "done": 12,
+    "total": 12
+  },
+  "features_built": [
+    "Turns a design file into a responsive page",
+    "Publishes a page to the web",
+    "Checks accessibility before publishing"
+  ],
+  "features_pending": [],
+  "updated_at": "2026-08-01",
+  "source_commit": "0123456789abcdef0123456789abcdef01234567"
+}

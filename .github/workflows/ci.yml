@@ -14,3 +14,4 @@ jobs:
         with:
           node-version-file: .nvmrc
       - run: npm run check
+      - run: npm test

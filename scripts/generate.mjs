@@ -1,13 +1,23 @@
-// OE Progress Board — generator entry point.
+// OE Progress Board — generator entry point. Everything else is a module it imports.
 //
-// Step 1 stub: argument parsing, usage, exit codes and the --placeholder page. Step 6 (E2-T4)
-// completes the --from and --repos-from modes; --help and --placeholder must keep working forever,
-// because step 1's gate re-runs them.
+// The only module that reads process.env (PROGRESS_READ_TOKEN, --repos-from mode only) and the only
+// one that writes to disk. The whole output is assembled in memory first and written last, so a
+// source error exits 3 having written nothing: a failed fetch can never replace a good published
+// board with a blank one.
 //
-// Exit codes (the interface): 0 ok · 2 usage error, nothing written · 4 output error.
+// Exit codes (the interface): 0 ok · 2 usage error · 3 source error · 4 output error.
+// --help and --placeholder are permanent: step 1's gate re-runs them forever.
 
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { SourceError, fetchFromApi, fetchFromDir, readManifest } from './fetch.mjs';
+import { computeBoard } from './compute.mjs';
+import { render } from './render.mjs';
+
+const STYLESHEET = fileURLToPath(new URL('../site/board.css', import.meta.url));
+const MODES = ['--placeholder', '--from', '--repos-from'];
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 const USAGE = `Usage: node scripts/generate.mjs [--placeholder | --from <dir> | --repos-from <file>] --out <dir>
                                  [--manifest <file>] [--now <YYYY-MM-DD>] [--help]
@@ -32,46 +42,76 @@ Exit: 0  wrote <out>/index.html, <out>/board.css and <out>/data/board.json
       4  output error — <out> could not be created or written
 `;
 
-const PLACEHOLDER_HTML = `<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OE Progress Board</title>
-<link rel="stylesheet" href="board.css">
-</head>
-<body>
-<main id="main">
-<h1>OE Progress Board</h1>
-<p>No units are configured yet.</p>
-</main>
-</body>
-</html>
-`;
+const usageError = (message) => ({ error: message });
 
-// Returns { help: true } | { placeholder: true, out } | { error: '<usage message>' }.
-function parseArgs(argv) {
-  const opts = { placeholder: false, out: null };
+// Returns { help: true } | { mode, source, out, manifest, now } | { error }.
+export function parseArgs(argv) {
+  const opts = { mode: null, source: null, out: null, manifest: 'manifest.json', now: null };
+  const value = (i, flag) => {
+    const v = argv[i + 1];
+    if (v === undefined || v.startsWith('-')) return null;
+    return v;
+  };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (arg === '--help') return { help: true };
-    if (arg === '--placeholder') {
-      opts.placeholder = true;
-    } else if (arg === '--out') {
-      if (argv[i + 1] === undefined) return { error: '--out needs a directory' };
-      opts.out = argv[i + 1];
+    if (MODES.includes(arg)) {
+      if (opts.mode !== null) return usageError(`exactly one of ${MODES.join(', ')} must be given`);
+      opts.mode = arg;
+      if (arg !== '--placeholder') {
+        opts.source = value(i, arg);
+        if (opts.source === null) return usageError(`${arg} needs a value`);
+        i += 1;
+      }
+    } else if (arg === '--out' || arg === '--manifest' || arg === '--now') {
+      const v = value(i, arg);
+      if (v === null) return usageError(`${arg} needs a value`);
+      if (arg === '--now' && !DATE_RE.test(v)) return usageError('--now must be a YYYY-MM-DD date');
+      opts[arg.slice(2)] = v;
       i += 1;
     } else {
-      return { error: `unknown or unsupported argument ${arg}` };
+      return usageError(`unknown or unsupported argument ${arg}`);
     }
   }
-  if (!opts.placeholder) return { error: 'exactly one of --placeholder, --from, --repos-from must be given' };
-  if (opts.out === null) return { error: '--out <dir> is required' };
+  if (opts.mode === null) return usageError(`exactly one of ${MODES.join(', ')} must be given`);
+  if (opts.out === null) return usageError('--out <dir> is required');
   return opts;
 }
 
-function main() {
-  const opts = parseArgs(process.argv.slice(2));
+const today = () => new Date().toISOString().slice(0, 10);
+
+// Reads, fetches, computes and renders. Throws SourceError on a source problem; writes nothing.
+async function build(opts, env, fetchImpl) {
+  let manifest = [];
+  let results = [];
+  if (opts.mode === '--from') {
+    manifest = readManifest(opts.manifest);
+    let isDir = false;
+    try {
+      isDir = statSync(opts.source).isDirectory();
+    } catch {
+      isDir = false;
+    }
+    if (!isDir) throw new SourceError(`--from directory ${opts.source} does not exist`);
+    results = fetchFromDir(opts.source, manifest);
+  } else if (opts.mode === '--repos-from') {
+    manifest = readManifest(opts.source);
+    results = await fetchFromApi(manifest, env.PROGRESS_READ_TOKEN, fetchImpl);
+  }
+  const board = computeBoard({ manifest, results, now: opts.now ?? today(), generatedAt: new Date().toISOString() });
+  return { html: render(board), json: `${JSON.stringify(board, null, 2)}\n` };
+}
+
+function write(out, artifacts) {
+  const css = readFileSync(STYLESHEET, 'utf8');
+  mkdirSync(join(out, 'data'), { recursive: true });
+  writeFileSync(join(out, 'index.html'), artifacts.html);
+  writeFileSync(join(out, 'board.css'), css);
+  writeFileSync(join(out, 'data', 'board.json'), artifacts.json);
+}
+
+export async function main(argv, env = process.env, fetchImpl = globalThis.fetch) {
+  const opts = parseArgs(argv);
   if (opts.help) {
     process.stdout.write(USAGE);
     return 0;
@@ -80,10 +120,19 @@ function main() {
     process.stderr.write(`error: ${opts.error} (run with --help for usage)\n`);
     return 2;
   }
+  let artifacts;
   try {
-    mkdirSync(opts.out, { recursive: true });
-    writeFileSync(join(opts.out, 'index.html'), PLACEHOLDER_HTML);
-    writeFileSync(join(opts.out, 'board.css'), '');
+    artifacts = await build(opts, env, fetchImpl);
+  } catch (error) {
+    if (error instanceof SourceError) {
+      process.stderr.write(`error: ${error.message}\n`);
+      return 3;
+    }
+    process.stderr.write(`error: the build failed before writing (${error && error.name})\n`);
+    return 4;
+  }
+  try {
+    write(opts.out, artifacts);
   } catch {
     process.stderr.write(`error: could not write the output directory ${opts.out}\n`);
     return 4;
@@ -91,4 +140,4 @@ function main() {
   return 0;
 }
 
-process.exitCode = main();
+process.exitCode = await main(process.argv.slice(2));
