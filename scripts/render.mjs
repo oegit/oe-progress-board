@@ -121,7 +121,7 @@ export function render(board) {
     ? 'Data as of — no unit has reported yet'
     : `Data as of ${escapeHtml(board.data_as_of)}`;
   const cards = board.units.length
-    ? `<ul class="cards">${board.units.map(card).join('')}</ul>`
+    ? `<ul class="cards">\n${board.units.map(card).join('\n')}\n</ul>`
     : `<p class="empty">No units are configured yet.</p>`;
   return `<!doctype html>
 <html lang="en">
