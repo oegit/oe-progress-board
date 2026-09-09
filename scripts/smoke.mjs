@@ -6,6 +6,7 @@
 // and never share an exit code.
 
 import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { findPrivateInfo } from './validate.mjs';
 
@@ -72,4 +73,6 @@ async function main(argv) {
   return 0;
 }
 
-process.exitCode = await main(process.argv.slice(2));
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  process.exitCode = await main(process.argv.slice(2));
+}

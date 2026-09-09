@@ -8,7 +8,7 @@
 
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const DEFAULT_SOURCE = fileURLToPath(new URL('../skills/report-progress/SKILL.md', import.meta.url));
@@ -68,4 +68,6 @@ export function main(argv) {
   return 0;
 }
 
-process.exitCode = main(process.argv.slice(2));
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  process.exitCode = main(process.argv.slice(2));
+}
