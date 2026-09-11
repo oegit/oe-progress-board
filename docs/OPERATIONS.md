@@ -43,7 +43,7 @@ and appears in the workflow on the generate step only.
 1. Open `https://github.com/settings/personal-access-tokens/new` while signed in to the `oegit`
    account.
 2. Token name `oe-progress-board read`, resource owner `oegit`, expiry 90 days.
-3. Repository access: **Only select repositories**, then select the 12 repositories listed in
+3. Repository access: **Only select repositories**, then select the 8 repositories listed in
    `manifest.json`.
 4. Repository permissions: **Contents: Read-only**. Nothing else.
 5. Generate the token and copy its value.
@@ -57,7 +57,7 @@ it was last updated, then force a refresh (above) and confirm the run succeeds.
 
 The token expires 90 days after creation. GitHub emails the account owner before expiry. To rotate:
 
-1. Create a new token exactly as above (a new expiry date, the same 12 repositories, the same
+1. Create a new token exactly as above (a new expiry date, the same 8 repositories, the same
    read-only permission).
 2. Run `gh secret set PROGRESS_READ_TOKEN -R oegit/oe-progress-board` with the new value. The old value
    is overwritten; nothing else changes.

@@ -1,4 +1,4 @@
-# Builds the board from the twelve unit repositories and publishes it to GitHub Pages.
+# Builds the board from the eight unit repositories and publishes it to GitHub Pages.
 # The read token appears on the generate step only. A generator exit 3 fails the job and
 # publishes nothing, so the previously deployed page keeps serving.
 name: build-board

@@ -24,12 +24,12 @@ test('--from fixtures writes the three artifacts with the expected unit mix', ()
   for (const f of ['index.html', 'board.css', 'data/board.json']) assert.ok(existsSync(join(out, f)), f);
   const board = JSON.parse(readFileSync(join(out, 'data/board.json'), 'utf8'));
   const by = (s) => board.units.filter((u) => u.status === s).length;
-  assert.equal(board.units.length, 12);
-  assert.deepEqual([by('ok'), by('invalid'), by('missing')], [3, 1, 8]);
+  assert.equal(board.units.length, 8);
+  assert.deepEqual([by('ok'), by('invalid'), by('missing')], [3, 1, 4]);
   assert.equal(board.data_as_of, '2026-08-28');
   assert.equal(typeof board.generated_at, 'string');
   const html = readFileSync(join(out, 'index.html'), 'utf8');
-  assert.equal(count(html, 'No report yet'), 8);
+  assert.equal(count(html, 'No report yet'), 4);
   assert.equal(count(html, 'Invalid report'), 1);
   assert.ok(html.includes('OE Progress Board'));
   assert.equal(readFileSync(join(out, 'board.css'), 'utf8'), readFileSync(join(root, 'site/board.css'), 'utf8'));

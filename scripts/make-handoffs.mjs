@@ -2,7 +2,7 @@
 // manifest entry except the board itself) into handoffs/<repo-name>.md.
 //
 // The files carry absolute local paths, so handoffs/ is gitignored: this script, docs/BACKFILL.md
-// and the test are committed; the eleven generated files never are. Idempotent: a second run
+// and the test are committed; the seven generated files never are. Idempotent: a second run
 // rewrites byte-identical files and exits 0.
 //
 // node scripts/make-handoffs.mjs [--out <dir>]   exit 0 · 2 usage · 3 manifest problem · 4 write error
@@ -18,19 +18,13 @@ export const DEFAULT_OUT = join(ROOT, 'handoffs');
 export const BOARD_SLUG = 'oe-progress-board';
 export const BOARD_ROOT = ROOT;
 const AGENTS_HOME = join(homedir(), 'Documents', 'AI Agents', 'Claude Agents');
-const PROJECTS_HOME = join(homedir(), 'Documents', 'AI Projects', 'open-english');
 
-// Agents follow one pattern; the three packs do not. Anything else is an error, never a guess.
+// Every unit besides the board is an agent living under AGENTS_HOME. Anything else is an error,
+// never a guess: extend this function before adding a non-agent unit to the manifest.
 export function localFolder(entry) {
   const name = entry.repo.split('/')[1];
-  const packs = {
-    'oe-pack-ugc': join(PROJECTS_HOME, 'ugc'),
-    'oe-pack-social-studio': join(PROJECTS_HOME, 'social-media-studio'),
-    'oe-pack-video-studio': join(PROJECTS_HOME, 'video-studio'),
-  };
-  if (packs[name]) return packs[name];
   if (name.startsWith('agent-')) return join(AGENTS_HOME, name);
-  throw new SourceError(`no local folder is known for ${entry.repo}; add it to the map in scripts/make-handoffs.mjs`);
+  throw new SourceError(`no local folder is known for ${entry.repo}; extend localFolder in scripts/make-handoffs.mjs`);
 }
 
 export function handoffText(entry) {

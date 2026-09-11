@@ -3,12 +3,8 @@
   { "slug": "agent-art-director", "repo": "oegit/agent-art-director", "kind": "agent" },
   { "slug": "agent-creative-director", "repo": "oegit/agent-creative-director", "kind": "agent" },
   { "slug": "agent-email-developer", "repo": "oegit/agent-email-developer", "kind": "agent" },
-  { "slug": "agent-social-media-factory", "repo": "oegit/agent-social-media-factory", "kind": "agent" },
   { "slug": "agent-social-media-studio", "repo": "oegit/agent-social-media-studio", "kind": "agent" },
   { "slug": "agent-ugc", "repo": "oegit/agent-ugc", "kind": "agent" },
   { "slug": "agent-video-studio", "repo": "oegit/agent-video-studio", "kind": "agent" },
-  { "slug": "agent-web-developer", "repo": "oegit/agent-web-developer", "kind": "agent" },
-  { "slug": "oe-pack-ugc", "repo": "oegit/oe-pack-ugc", "kind": "project" },
-  { "slug": "oe-pack-social-studio", "repo": "oegit/oe-pack-social-studio", "kind": "project" },
-  { "slug": "oe-pack-video-studio", "repo": "oegit/oe-pack-video-studio", "kind": "project" }
+  { "slug": "agent-web-developer", "repo": "oegit/agent-web-developer", "kind": "agent" }
 ]

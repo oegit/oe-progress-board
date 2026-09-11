@@ -52,9 +52,9 @@
     "Explains itself to anyone who lands on the repository"
   ],
   "features_pending": [
-    "Cards for the eleven other agents and packs",
+    "Cards for the seven other agents",
     "An audit of the build before testing starts"
   ],
-  "updated_at": "2026-09-09",
-  "source_commit": "419c6df"
+  "updated_at": "2026-09-11",
+  "source_commit": "0e4cb03"
 }

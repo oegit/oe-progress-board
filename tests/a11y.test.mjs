@@ -98,7 +98,7 @@ test('every <svg> is aria-hidden or carries a <title>', () => {
 
 test('no stage state is signalled by colour alone: each step carries its glyph and its word', () => {
   const steps = [...html.matchAll(/<li class="step ([a-z_]+)">([\s\S]*?)<\/li>/g)];
-  assert.equal(steps.length, 12 * 7);
+  assert.equal(steps.length, manifest.length * 7);
   for (const [, state, inner] of steps) {
     assert.ok(STATE_WORDS[state], `known state ${state}`);
     assert.ok(inner.includes(`>${STATE_WORDS[state]}<`), `state word for ${state}`);

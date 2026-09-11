@@ -61,7 +61,7 @@ Locally the same pipeline runs with `--from tests/fixtures/units`, which replace
 | Concern | Single source of truth |
 |---|---|
 | The report contract | `docs/CONTRACT.md` + `scripts/validate.mjs` — change both together, and bump `schema_version` |
-| The unit list | `manifest.json` — 12 entries; use the `add-unit` skill to change it |
+| The unit list | `manifest.json` — 8 entries; use the `add-unit` skill to change it |
 | Design tokens | `site/board.css` `:root` — no colour literal anywhere else, in CSS or in `render.mjs` |
 | The Node major | `.nvmrc` — the workflows read it with `node-version-file`, never a second literal |
 | The output directory | `dist` in CI (set by `build-board.yml`), `.tmp/*` locally. They are two different values, not one written twice |
@@ -117,7 +117,7 @@ Tokens are defined once in `site/board.css` `:root`. Components reference token 
 
 | Variable | Required | Used by | Source |
 |---|---|---|---|
-| `PROGRESS_READ_TOKEN` | Only in CI, only in `--repos-from` mode | `scripts/generate.mjs` | Fine-grained PAT, owner `oegit`, **Contents: Read-only** on the 12 manifest repositories. Set with `gh secret set PROGRESS_READ_TOKEN -R oegit/oe-progress-board` |
+| `PROGRESS_READ_TOKEN` | Only in CI, only in `--repos-from` mode | `scripts/generate.mjs` | Fine-grained PAT, owner `oegit`, **Contents: Read-only** on the 8 manifest repositories. Set with `gh secret set PROGRESS_READ_TOKEN -R oegit/oe-progress-board` |
 
 **There is no `.env` and no `.env.example` in this project, deliberately.** No local command reads an
 environment variable; the workflow injects the one secret with an `env:` block on a single step.

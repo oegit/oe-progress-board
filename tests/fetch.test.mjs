@@ -25,10 +25,10 @@ function stub(plan) {
 }
 const wrap = (text) => Buffer.from(text, 'utf8').toString('base64').replace(/(.{60})/g, '$1\n');
 
-test('manifest.json has 12 valid entries with the board first', () => {
-  assert.equal(manifest.length, 12);
+test('manifest.json has 8 valid entries with the board first', () => {
+  assert.equal(manifest.length, 8);
   assert.equal(manifest[0].slug, 'oe-progress-board');
-  assert.equal(new Set(manifest.map((e) => e.slug)).size, 12);
+  assert.equal(new Set(manifest.map((e) => e.slug)).size, 8);
 });
 
 test('readManifest / checkManifest name the offending index', () => {
@@ -44,11 +44,11 @@ test('readManifest / checkManifest name the offending index', () => {
   assert.throws(() => checkManifest({}), { name: 'SourceError' });
 });
 
-test('fetchFromDir over the fixtures: 12 results, 4 found, 8 missing, no throw', () => {
+test('fetchFromDir over the fixtures: 8 results, 4 found, 4 missing, no throw', () => {
   const results = fetchFromDir(join(root, 'tests/fixtures/units'), manifest);
-  assert.equal(results.length, 12);
+  assert.equal(results.length, 8);
   assert.equal(results.filter((r) => r.state === 'found').length, 4);
-  assert.equal(results.filter((r) => r.state === 'missing').length, 8);
+  assert.equal(results.filter((r) => r.state === 'missing').length, 4);
   assert.deepEqual(results.map((r) => r.slug), manifest.map((e) => e.slug));
   const ugc = results.find((r) => r.slug === 'agent-ugc');
   assert.equal(JSON.parse(ugc.raw).slug, 'agent-ugc');
@@ -58,9 +58,9 @@ test('fetchFromDir over the fixtures: 12 results, 4 found, 8 missing, no throw',
 test('fetchFromApi: 404 is missing and the walk continues', async () => {
   const { fetchImpl, calls } = stub({ 'oegit/agent-ugc': { status: 200, content: wrap('{"slug":"agent-ugc"}') } });
   const results = await fetchFromApi(manifest, 'token-value', fetchImpl);
-  assert.equal(results.length, 12);
-  assert.equal(calls.length, 12);
-  assert.equal(results.filter((r) => r.state === 'missing').length, 11);
+  assert.equal(results.length, 8);
+  assert.equal(calls.length, 8);
+  assert.equal(results.filter((r) => r.state === 'missing').length, 7);
   assert.equal(results.find((r) => r.slug === 'agent-ugc').state, 'found');
 });
 
