@@ -25,12 +25,28 @@ it runs inside the *unit's* repository, not this one.
 3. Update the two counted facts that live in prose, in the same commit: the unit count in
    `README.md` and the row list in `docs/BACKFILL.md`.
 4. Regenerate the backfill hand-offs so the new unit gets one:
-   `node scripts/make-handoffs.mjs`. If the unit's local folder is not one the script already maps,
-   add it to the literal map inside `scripts/make-handoffs.mjs` first.
+   `node scripts/make-handoffs.mjs`. The script resolves a local folder for `agent-*` repositories
+   only; for any other name it exits 3 by design. Extend `localFolder` in
+   `scripts/make-handoffs.mjs` (and its test) before adding a non-agent unit.
 5. If the unit's repository is private, extend the fine-grained PAT's repository selection to include
    it — otherwise its card will read "No report yet" forever. Procedure: `docs/OPERATIONS.md`.
 6. Commit on `architect/blueprint`, push, open a PR, wait for `ci.yml`, merge. The hourly build picks
    it up; force it with `gh workflow run build-board.yml -R oegit/oe-progress-board`.
+
+## Retire a unit
+
+A unit that will not be measured must leave the manifest: a card that can never report reads as a
+reporting failure on a public page. One commit, then one PR:
+
+1. Remove its entry from `manifest.json`. Never reorder the others.
+2. Reconcile every counted fact in the same commit: the unit counts in `CLAUDE.md`,
+   `docs/OPERATIONS.md`, `.claude/rules/public-text.md` and the comment in
+   `.github/workflows/build-board.yml`; the row list in `docs/BACKFILL.md`; every test that asserts
+   a unit count or names the retired slug (`npm test` fails on each one until it is fixed).
+3. Run the Verify block below, then `node scripts/make-handoffs.mjs` and delete the retired unit's
+   stale file from `handoffs/` by hand — the script never deletes.
+4. Remove the repository from the read token's selection (`docs/OPERATIONS.md`), and record the
+   decision with a dated row in the blueprint's decision log.
 
 ## Verify
 

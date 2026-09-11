@@ -28,7 +28,7 @@ not reminders** — a violation fails the build rather than shipping quietly.
 
 **Two documented exceptions, deliberate and bounded:**
 
-- `manifest.json` carries the *names* of the 12 private repositories, because the generator needs them
+- `manifest.json` carries the *names* of the 8 private repositories, because the generator needs them
   and every local gate reads the file. The names are published; the contents are not, and the rendered
   page never links to them.
 - The `report-progress` skill source and `docs/OPERATIONS.md` name the board repository's own public

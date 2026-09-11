@@ -14,14 +14,10 @@ on the operator's machine. Those files are not committed: they carry local machi
 | 1 | `agent-art-director` | agent | no |
 | 2 | `agent-creative-director` | agent | no |
 | 3 | `agent-email-developer` | agent | no |
-| 4 | `agent-social-media-factory` | agent | no |
-| 5 | `agent-social-media-studio` | agent | no |
-| 6 | `agent-ugc` | agent | no |
-| 7 | `agent-video-studio` | agent | no |
-| 8 | `agent-web-developer` | agent | no |
-| 9 | `oe-pack-ugc` | project | no |
-| 10 | `oe-pack-social-studio` | project | no |
-| 11 | `oe-pack-video-studio` | project | no |
+| 4 | `agent-social-media-studio` | agent | no |
+| 5 | `agent-ugc` | agent | no |
+| 6 | `agent-video-studio` | agent | no |
+| 7 | `agent-web-developer` | agent | no |
 
 The board itself (`oe-progress-board`) published its own report first, as the proving run of the
 skill. Update a row to "yes" with the date when that unit's card stops reading "No report yet".

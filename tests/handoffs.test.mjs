@@ -45,11 +45,9 @@ test('every hand-off carries the six launcher labels with values, Branch: main, 
   }
 });
 
-test('local folders: agents follow the pattern, the three packs come from the literal map, anything else throws', () => {
+test('local folders: agents follow the pattern, anything else throws', () => {
   assert.ok(localFolder({ repo: 'oegit/agent-ugc' }).endsWith('/Claude Agents/agent-ugc'));
-  assert.ok(localFolder({ repo: 'oegit/oe-pack-ugc' }).endsWith('/open-english/ugc'));
-  assert.ok(localFolder({ repo: 'oegit/oe-pack-social-studio' }).endsWith('/open-english/social-media-studio'));
-  assert.ok(localFolder({ repo: 'oegit/oe-pack-video-studio' }).endsWith('/open-english/video-studio'));
+  assert.throws(() => localFolder({ repo: 'oegit/oe-pack-ugc' }), { name: 'SourceError' });
   assert.throws(() => localFolder({ repo: 'oegit/something-else' }), { name: 'SourceError' });
   for (const entry of others) assert.doesNotThrow(() => localFolder(entry), entry.repo);
 });

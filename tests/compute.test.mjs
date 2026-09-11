@@ -59,13 +59,13 @@ test('an invalid report is included with its rule and everything else is still c
 });
 
 test('a manifest entry with no report is missing, with the manifest kind and the slug as name', () => {
-  const pack = unit('oe-pack-ugc');
-  assert.equal(pack.status, 'missing');
-  assert.equal(pack.rule, null);
-  assert.equal(pack.name, 'oe-pack-ugc');
-  assert.equal(pack.kind, 'project');
-  assert.equal(pack.building_pct, null);
-  assert.equal(board().units.filter((u) => u.status === 'missing').length, 8);
+  const art = unit('agent-art-director');
+  assert.equal(art.status, 'missing');
+  assert.equal(art.rule, null);
+  assert.equal(art.name, 'agent-art-director');
+  assert.equal(art.kind, 'agent');
+  assert.equal(art.building_pct, null);
+  assert.equal(board().units.filter((u) => u.status === 'missing').length, 4);
 });
 
 test('units keep manifest order and the ok unit carries the passthrough fields verbatim', () => {
@@ -86,7 +86,7 @@ test('the portfolio has the 9 buckets, sums to the unit count, and data_as_of is
   assert.equal(b.portfolio.building, 1);
   assert.equal(b.portfolio.planning_audit, 1);
   assert.equal(b.portfolio.deployed, 1);
-  assert.equal(b.portfolio.no_report, 9);
+  assert.equal(b.portfolio.no_report, 5);
   assert.equal(b.data_as_of, '2026-08-28');
   assert.equal(b.generated_at, NOW);
 });
@@ -94,6 +94,6 @@ test('the portfolio has the 9 buckets, sums to the unit count, and data_as_of is
 test('with no ok unit data_as_of is null and every unit is no_report', () => {
   const b = computeBoard({ manifest, results: [], now: NOW, generatedAt: '2026-09-01T10:00:00Z' });
   assert.equal(b.data_as_of, null);
-  assert.equal(b.portfolio.no_report, 12);
+  assert.equal(b.portfolio.no_report, 8);
   assert.equal(b.generated_at, '2026-09-01T10:00:00Z');
 });

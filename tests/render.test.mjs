@@ -15,13 +15,16 @@ const manifest = readManifest(join(root, 'manifest.json'));
 const NOW = '2026-09-01';
 const board = computeBoard({ manifest, results: fetchFromDir(join(root, 'tests/fixtures/units'), manifest), now: NOW });
 const html = render(board);
+const UGC = manifest.findIndex((e) => e.slug === 'agent-ugc');
 const count = (text, needle) => text.split(needle).length - 1;
 const cardOf = (slug, doc = html) => {
   const marker = doc.indexOf(`data-slug="${slug}"`);
   assert.ok(marker > -1, `card ${slug} is rendered`);
   const start = doc.lastIndexOf('<li class="card', marker);
   const end = doc.indexOf('<li class="card', marker);
-  return doc.slice(start, end === -1 ? doc.indexOf('</ul>', start) : end);
+  // The last card has no successor; it ends where the cards list does. The first `</ul>` after it
+  // would be its own feature list, so the boundary is `</main>`, which nothing inside a card emits.
+  return doc.slice(start, end === -1 ? doc.indexOf('</main>', start) : end);
 };
 
 test('render.mjs is pure and carries no colour literal or locale formatting', () => {
@@ -50,17 +53,17 @@ test('heading levels never skip and the unit list is a ul of li cards', () => {
     assert.ok(level <= prev + 1, `heading jumps from h${prev} to h${level}`);
     return level;
   }, 0);
-  assert.equal(count(html, '<li class="card'), 12);
+  assert.equal(count(html, '<li class="card'), 8);
   assert.ok(html.includes('<ul class="cards">'));
 });
 
-test('missing units render No report yet, 8 times, with an all-unknown stepper', () => {
-  assert.equal(count(html, 'No report yet'), 8);
-  const pack = cardOf('oe-pack-ugc');
-  assert.ok(pack.includes('<h3>oe-pack-ugc</h3>'));
-  assert.ok(pack.includes('Project'));
-  assert.equal(count(pack, 'class="step unknown"'), 7);
-  assert.equal(count(pack, STATE_WORDS.unknown), 7);
+test('missing units render No report yet, 4 times, with an all-unknown stepper', () => {
+  assert.equal(count(html, 'No report yet'), 4);
+  const art = cardOf('agent-art-director');
+  assert.ok(art.includes('<h3>agent-art-director</h3>'));
+  assert.ok(art.includes('Agent'));
+  assert.equal(count(art, 'class="step unknown"'), 7);
+  assert.equal(count(art, STATE_WORDS.unknown), 7);
 });
 
 test('the invalid unit renders Invalid report with the rule name, once', () => {
@@ -91,8 +94,8 @@ test('every stage state renders a glyph, the stage label and the state word as t
   assert.ok(ugc.includes('Planning audit') && ugc.includes('Building audit'));
   assert.ok(ugc.includes('Half the task bundle is closed.'));
   const blocked = computeBoard({
-    manifest: manifest.slice(6, 7),
-    results: [{ slug: 'agent-ugc', state: 'found', raw: JSON.stringify({ ...JSON.parse(fetchFromDir(join(root, 'tests/fixtures/units'), manifest.slice(6, 7))[0].raw), stages: STAGE_IDS.map((id, i) => (i < 3 ? { id, state: 'done', date: '2026-06-14' } : i === 3 ? { id, state: 'blocked', date: '2026-08-20' } : { id, state: 'pending' })) }) }],
+    manifest: manifest.slice(UGC, UGC + 1),
+    results: [{ slug: 'agent-ugc', state: 'found', raw: JSON.stringify({ ...JSON.parse(fetchFromDir(join(root, 'tests/fixtures/units'), manifest.slice(UGC, UGC + 1))[0].raw), stages: STAGE_IDS.map((id, i) => (i < 3 ? { id, state: 'done', date: '2026-06-14' } : i === 3 ? { id, state: 'blocked', date: '2026-08-20' } : { id, state: 'pending' })) }) }],
     now: NOW,
   });
   const out = render(blocked);
@@ -115,7 +118,7 @@ test('the header states data_as_of and the portfolio legend prints every bucket 
   assert.ok(html.includes('Data as of 2026-08-28'));
   assert.ok(html.includes('Building 1'));
   assert.ok(html.includes('Deployed 1'));
-  assert.ok(html.includes('No report 9'));
+  assert.ok(html.includes('No report 5'));
   assert.ok(html.includes('aria-labelledby="portfolio-h"'));
   const svgs = html.match(/<svg[^>]*>/g);
   assert.ok(svgs.length > 0);
